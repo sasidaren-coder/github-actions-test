@@ -1,0 +1,30 @@
+name: Terraform CD
+
+on:
+  push:
+    paths:
+      - 'confluentcloud-resource-provisioner-tf/client-configs/**'
+
+jobs:
+  terraform:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Change to cccloud directory
+        run: cd confluentcloud-resource-provisioner-tf
+
+      - name: Install Terraform CLI
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8 # Change to your preferred version
+
+      - name: Navigate to Terraform root
+        working-directory: confluentcloud-resource-provisioner-tf
+        run: |
+          terraform init
+          terraform plan -var-file="env/dev.terraform.tfvars" -var-file="client-configs/client1/client1-dev.json" -out tfplan
+          terraform apply -auto-approve tfplan

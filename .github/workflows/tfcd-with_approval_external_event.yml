@@ -50,6 +50,7 @@ jobs:
             
             echo "Downloaded to $(pwd)/$LOCAL_PATH"
             pwd
+            cat $(pwd)/$LOCAL_PATH
           done
 
       - name: Navigate to Terraform root

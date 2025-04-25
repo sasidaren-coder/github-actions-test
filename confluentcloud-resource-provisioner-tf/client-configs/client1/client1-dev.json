@@ -1,7 +1,7 @@
 {
   "topics": [
     {
-      "topic_name": "acme-orders",
+      "topic_name": "acme-orders1",
       "partitions_count": 1,
       "config": {
         "cleanup.policy": "delete",

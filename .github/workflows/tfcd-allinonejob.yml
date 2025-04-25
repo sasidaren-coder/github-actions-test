@@ -3,7 +3,7 @@ name: Terraform CD
 on:
   push:
     paths:
-      - 'confluentcloud-resource-provisioner-tf/client-configs/**'
+      - 'confluentcloud-resource-provisioner-tf/client-configs123/**'
 
 jobs:
   terraform:

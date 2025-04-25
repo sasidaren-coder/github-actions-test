@@ -3,7 +3,7 @@ name: Terraform CD with Approval
 on:
   repository_dispatch:
     types: [config-updated]
-    run-name: Workflow execution for Client - | ${{ github.event.client_payload.clients }}
+    run-name: Workflow execution for Client
 
 jobs:
   terraform-plan:

@@ -25,16 +25,18 @@ jobs:
         run: |
           echo "Fetching all changed files from cc-client-config-repo..."
 
-          CHANGED_FILES=$(echo '${{ github.event.client_payload.changed_files }}' | jq -r '.[]')
+          CHANGED_FILES_JSON='${{ toJson(github.event.client_payload.changed_files) }}'
 
-          for FILE in $CHANGED_FILES; do
+          echo "Raw changed files JSON: $CHANGED_FILES_JSON"
+
+          echo "$CHANGED_FILES_JSON" | jq -r '.[]' | while read FILE; do
             echo "Downloading file: $FILE"
             
             # Remove 'dev/' prefix if needed
             # TARGET_FILE=${FILE#dev/}
 
             # Figure out local path
-            LOCAL_PATH="confluentcloud-resource-provisioner-tf/$TARGET_FILE"
+            LOCAL_PATH="confluentcloud-resource-provisioner-tf/$FILE"
             
             # Create destination directory
             mkdir -p $(dirname "$LOCAL_PATH")

@@ -1,7 +1,7 @@
 {
   "topics": [
     {
-      "topic_name": "tp2",
+      "topic_name": "tp3",
       "partitions_count": 1,
       "config": {
         "cleanup.policy": "delete",
@@ -11,7 +11,7 @@
   ],
   "serviceaccounts": [
         {
-            "name": "svc2",
+            "name": "svc3",
             "description": "test service account1",
             "operation": [
                 "read"

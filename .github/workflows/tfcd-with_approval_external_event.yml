@@ -56,8 +56,8 @@ jobs:
         run: |
           terraform init
           pwd
-          ls -ltr confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
-          cat confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
+          ls -ltr /home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
+          cat /home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
           terraform plan -var-file="env/dev.terraform.tfvars" -var-file="/home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json" -out tfplan
           
       - name: Upload Terraform Plan Artifact

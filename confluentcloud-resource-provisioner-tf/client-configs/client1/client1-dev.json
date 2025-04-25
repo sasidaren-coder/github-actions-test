@@ -1,35 +1,20 @@
 {
   "topics": [
     {
-      "topic_name": "acme-orders",
+      "topic_name": "tp1",
       "partitions_count": 1,
       "config": {
         "cleanup.policy": "delete",
         "retention.ms": "604800000"
       }
-    },
-    {
-      "topic_name": "acme-payments",
-      "partitions_count": 1,
-      "config": {
-        "cleanup.policy": "compact"
-      }
     }
   ],
   "serviceaccounts": [
         {
-            "name": "svc-acc1-consumer",
+            "name": "svc1",
             "description": "test service account1",
             "operation": [
                 "read"
-            ]
-        },
-        {
-            "name": "svc-acc2-producer",
-            "description": "test service account2",
-            "operation": [
-                "read",
-                "write"
             ]
         }
     ]

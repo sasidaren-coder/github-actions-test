@@ -9,3 +9,7 @@ variable "serviceaccounts" {
 variable "kafka_cluster_id" {
   type = string
 }
+
+variable "cc_environment_id" {
+  type = string
+}

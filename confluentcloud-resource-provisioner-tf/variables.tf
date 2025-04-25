@@ -26,6 +26,10 @@ variable "kafka_api_secret" {
   sensitive = true
 }
 
+variable "cc_environment_id" {
+  type = string
+}
+
 variable "topics" {
   type = list(object({
     topic_name         = string

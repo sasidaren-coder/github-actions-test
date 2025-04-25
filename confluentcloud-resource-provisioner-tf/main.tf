@@ -37,4 +37,5 @@ module "service_accounts" {
 
   serviceaccounts = var.serviceaccounts
   kafka_cluster_id = var.kafka_cluster_id
+  cc_environment_id = var.cc_environment_id
 }

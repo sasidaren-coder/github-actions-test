@@ -30,6 +30,10 @@ resource "confluent_api_key" "this" {
     id          = var.kafka_cluster_id
     api_version = "cmk/v2"
     kind        = "Cluster"
+
+    environment {
+      id = var.cc_environment_id
+    }
   }
 
   depends_on = [confluent_service_account.this]

@@ -1,6 +1,7 @@
 confluent_cloud_api_key = "VQKCVKGQATPK7MWH"
 confluent_cloud_api_secret = "pk81u2x+EqYxlR/OGf4fLr3WMc6Gf4QIUNxTr5qFukuobvTgsVlML/saMm3HpbI7"
 kafka_cluster_id = "lkc-1mwkj6"
+cc_environment_id = "env-g96n51"
 kafka_rest_endpoint = "https://pkc-lgk0v.us-west1.gcp.confluent.cloud:443"
 kafka_api_key = "4CN4GOQOFUB3IEAF"
 kafka_api_secret = "hV88QHt1hN+wCHHJA4jOIIAs+fz/9TJNY9T3nhmkfIgyW2ODOPJONJoKss63VP/b"

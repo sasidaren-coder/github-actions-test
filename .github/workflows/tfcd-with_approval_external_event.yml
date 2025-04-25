@@ -39,11 +39,15 @@ jobs:
             # Figure out local path
             LOCAL_PATH="$FILE"
             
+            DOWNLOAD_URL="https://raw.githubusercontent.com/sasidaren-coder/cc-client-config-repo/main/$FILE"
+
+            echo "Download URL: $DOWNLOAD_URL"
+
             # Create destination directory
             mkdir -p "$(dirname "$LOCAL_PATH")"
 
             # Download the file
-            curl -sSL -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            curl -v -sSL -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
                 -H "Accept: application/vnd.github.v3.raw" \
                 -o "$LOCAL_PATH" \
                 "https://raw.githubusercontent.com/sasidaren-coder/cc-client-config-repo/main/$FILE"

@@ -37,10 +37,10 @@ jobs:
             # TARGET_FILE=${FILE#dev/}
 
             # Figure out local path
-            LOCAL_PATH="./$FILE"
+            LOCAL_PATH="$FILE"
             
             # Create destination directory
-            mkdir -p $(dirname "$LOCAL_PATH")
+            mkdir -p "$(dirname "$LOCAL_PATH")"
 
             # Download the file
             curl -sSL -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
@@ -48,7 +48,7 @@ jobs:
                 -o "$LOCAL_PATH" \
                 "https://raw.githubusercontent.com/sasidaren-coder/cc-client-config-repo/main/$FILE"
             
-            echo "Downloaded to $LOCAL_PATH"
+            echo "Downloaded to $(pwd)/$LOCAL_PATH"
             pwd
           done
 

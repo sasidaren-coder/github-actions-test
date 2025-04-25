@@ -3,6 +3,7 @@ name: Terraform CD with Approval
 on:
   repository_dispatch:
     types: [config-updated]
+    run-name: Workflow execution for Client - | ${{ env.clients }}
 
 jobs:
   terraform-plan:
@@ -31,6 +32,10 @@ jobs:
           echo "Raw changed files JSON: $CHANGED_FILES_JSON"
 
           echo "$CHANGED_FILES_JSON" | jq -r '.[]' | while read FILE; do
+            CLIENT=$(echo "$FILE" | cut -d'/' -f2)
+            echo "Found client: $CLIENT"
+            echo "$CLIENT" >> clients.txt
+
             echo "Downloading file: $FILE"
             
             # Remove 'dev/' prefix if needed
@@ -47,25 +52,19 @@ jobs:
             mkdir -p "$(dirname "$LOCAL_PATH")"
 
             # Download the file
-            curl -v -sSL -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
+            curl -sSL -H "Authorization: token ${{ secrets.REPO_ACCESS_TOKEN }}" \
                 -H "Accept: application/vnd.github.v3.raw" \
                 -o "$LOCAL_PATH" \
                 "https://raw.githubusercontent.com/sasidaren-coder/cc-client-config-repo/main/$FILE"
             
             echo "Downloaded to $(pwd)/$LOCAL_PATH"
-            pwd
-            cat $(pwd)/$LOCAL_PATH
           done
+          echo "clients=$(paste -sd "," clients.txt)" >> $GITHUB_ENV
 
       - name: Navigate to Terraform root
         working-directory: confluentcloud-resource-provisioner-tf
         run: |
           terraform init
-          # pwd
-          # ls -ltr /home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
-          pwd
-          cat configs/client1/client1-dev.json
-          cat env/dev.terraform.tfvars
           terraform plan -var-file="env/dev.terraform.tfvars" -var-file="configs/client1/client1-dev.json" -out tfplan
           
       - name: Upload Terraform Plan Artifact

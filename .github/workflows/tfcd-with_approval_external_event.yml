@@ -22,6 +22,7 @@ jobs:
           terraform_version: 1.9.8 # Change to your preferred version
 
       - name: Download Changed Config Files
+        working-directory: confluentcloud-resource-provisioner-tf
         run: |
           echo "Fetching all changed files from cc-client-config-repo..."
 
@@ -36,7 +37,7 @@ jobs:
             # TARGET_FILE=${FILE#dev/}
 
             # Figure out local path
-            LOCAL_PATH="confluentcloud-resource-provisioner-tf/$FILE"
+            LOCAL_PATH="./$FILE"
             
             # Create destination directory
             mkdir -p $(dirname "$LOCAL_PATH")
@@ -58,9 +59,9 @@ jobs:
           # pwd
           # ls -ltr /home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
           pwd
-          cat /home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
+          cat configs/client1/client1-dev.json
           cat env/dev.terraform.tfvars
-          terraform plan -var-file="env/dev.terraform.tfvars" -var-file="/home/runner/work/github-actions-test/github-actions-test/confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json" -out tfplan
+          terraform plan -var-file="env/dev.terraform.tfvars" -var-file="configs/client1/client1-dev.json" -out tfplan
           
       - name: Upload Terraform Plan Artifact
         uses: actions/upload-artifact@v4

@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"service_accounts","Source":"./modules/kafka-serviceaccounts","Dir":"modules/kafka-serviceaccounts"},{"Key":"topics","Source":"./modules/kafka-topic","Dir":"modules/kafka-topic"}]}

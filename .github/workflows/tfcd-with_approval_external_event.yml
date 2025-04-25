@@ -54,7 +54,10 @@ jobs:
         working-directory: confluentcloud-resource-provisioner-tf
         run: |
           terraform init
-          terraform plan -var-file="env/dev.terraform.tfvars" -var-file="configs/client1/client1-dev.json" -out tfplan
+          pwd
+          ls -ltr confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
+          cat confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json
+          terraform plan -var-file="env/dev.terraform.tfvars" -var-file="confluentcloud-resource-provisioner-tf/configs/client1/client1-dev.json" -out tfplan
           
       - name: Upload Terraform Plan Artifact
         uses: actions/upload-artifact@v4

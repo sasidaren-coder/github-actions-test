@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout github-actions-repo
         uses: actions/checkout@v3
+        with:
+          repository: sasidaren-coder/github-actions-test
+          path: github-actions-test
       - name: Checkout cc-client-config-repo
         uses: actions/checkout@v3
         with:

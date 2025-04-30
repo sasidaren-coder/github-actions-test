@@ -1,3 +1,50 @@
+# on:
+#   workflow_call:
+#     inputs:
+#       tf_action:
+#         required: true
+#         type: string  # "plan", "apply"
+#       config_path:
+#         required: true
+#         type: string
+
+# jobs:
+#   job1-plan:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout github-actions-repo
+#         uses: actions/checkout@v3
+#         with:
+#           repository: sasidaren-coder/github-actions-test
+#           path: github-actions-test
+#       - name: Checkout cc-client-config-repo
+#         uses: actions/checkout@v3
+#         with:
+#           repository: sasidaren-coder/cc-client-config-repo
+#           path: cc-client-config-repo
+#       - name: Debug Working Directory
+#         run: pwd && ls -al
+#       - name: Custom rules
+#         run: |
+#           echo "Working Directory: $(pwd)"
+#           chmod +x ./github-actions-test/scripts/validate-inputs.sh
+#           ./github-actions-test/scripts/validate-inputs.sh ./cc-client-config-repo/${{ inputs.config_path }}
+      
+#       - name: Install Terraform CLI
+#         uses: hashicorp/setup-terraform@v3
+#         with:
+#           terraform_version: 1.9.8 # Change to your preferred version
+
+#       - name: Terraform Init
+#         run: terraform init -backend-config=...
+#       - name: Terraform Validate
+#         run: terraform validate
+#       - name: Terraform Plan
+#         run: terraform plan -var-file=cc-client-config-repo/${{ inputs.config_path }}/terraform.tfvars
+
+
+name: CI Plan Workflow
+
 on:
   workflow_call:
     inputs:
@@ -9,35 +56,38 @@ on:
         type: string
 
 jobs:
-  job1-plan:
+  terraform-plan:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout github-actions-repo
+      # This checks out the CALLER repo (cc-client-config-repo), which happens by default
+      - name: Checkout cc-client-config-repo
+        uses: actions/checkout@v3
+
+      # This checks out the reusable IAC repo containing Terraform code and scripts
+      - name: Checkout github-actions-test (iac-repo)
         uses: actions/checkout@v3
         with:
           repository: sasidaren-coder/github-actions-test
-          path: github-actions-test
-      - name: Checkout cc-client-config-repo
-        uses: actions/checkout@v3
-        with:
-          repository: sasidaren-coder/cc-client-config-repo
-          path: cc-client-config-repo
-      - name: Debug Working Directory
-        run: pwd && ls -al
-      - name: Custom rules
-        run: |
-          echo "Working Directory: $(pwd)"
-          chmod +x ./github-actions-test/scripts/validate-inputs.sh
-          ./github-actions-test/scripts/validate-inputs.sh ./cc-client-config-repo/${{ inputs.config_path }}
-      
+          path: iac
+
+      # Run validation script from the iac repo
+      - name: Validate inputs
+        run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
+
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.9.8 # Change to your preferred version
-          
+
+      # Terraform Init, Validate, Plan from the module in iac repo
       - name: Terraform Init
-        run: terraform init -backend-config=...
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: terraform init
+
       - name: Terraform Validate
+        working-directory: iac/confluentcloud-resource-provisioner-tf
         run: terraform validate
+
       - name: Terraform Plan
-        run: terraform plan -var-file=cc-client-config-repo/${{ inputs.config_path }}/terraform.tfvars
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: terraform plan -var-file=iac/confluentcloud-resource-provisioner-tf/env/dev.terraform.tfvars

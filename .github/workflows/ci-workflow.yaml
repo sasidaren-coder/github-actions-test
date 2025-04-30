@@ -90,4 +90,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: iac/confluentcloud-resource-provisioner-tf
-        run: terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=${{ inputs.config_path }}/resources.yaml"
+        run: |
+          echo "Working Directory: $(pwd)"
+          echo "Listing Files: $(ls -ltr ../..)"
+          terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"

@@ -28,7 +28,13 @@ jobs:
         run: |
           echo "Working Directory: $(pwd)"
           chmod +x ./github-actions-test/scripts/validate-inputs.sh
-          ./github-actions-test/scripts/validate-inputs.sh ${{ inputs.config_path }}
+          ./github-actions-test/scripts/validate-inputs.sh ./cc-client-config-repo/${{ inputs.config_path }}
+      
+      - name: Install Terraform CLI
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8 # Change to your preferred version
+          
       - name: Terraform Init
         run: terraform init -backend-config=...
       - name: Terraform Validate

@@ -2,7 +2,6 @@ variable "serviceaccounts" {
   type = list(object({
     name      = string
     description      = string
-    operation = list(string)
   }))
 }
 

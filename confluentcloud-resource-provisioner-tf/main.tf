@@ -17,6 +17,14 @@ provider "confluent" {
   kafka_api_secret    = var.kafka_api_secret
 }
 
+# locals {
+#   resource_config = yamldecode(file("${path.module}/resources.yaml"))
+# }
+
+locals {
+  resource_config = yamldecode(file(var.resource_yaml_path))
+}
+
 module "topics" {
   source = "./modules/kafka-topic"
 
@@ -24,7 +32,7 @@ module "topics" {
     confluent = confluent.cc
   }
 
-  topics = var.topics
+  topics = local.resource_config.topics
 }
 
 
@@ -35,7 +43,7 @@ module "service_accounts" {
     confluent = confluent.cc
   }
 
-  serviceaccounts = var.serviceaccounts
+  serviceaccounts = local.resource_config.serviceaccounts
   kafka_cluster_id = var.kafka_cluster_id
   cc_environment_id = var.cc_environment_id
 }

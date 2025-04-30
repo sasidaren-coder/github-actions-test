@@ -30,19 +30,24 @@ variable "cc_environment_id" {
   type = string
 }
 
-variable "topics" {
-  type = list(object({
-    topic_name         = string
-    partitions_count   = number
-    config             = map(string)
-  }))
+variable "resource_yaml_path" {
+  type        = string
+  description = "Path to the YAML config file"
 }
 
-variable "serviceaccounts" {
-  type = list(object({
-    name      = string
-    description      = string
-    operation = list(string)
-  }))
-}
+# variable "topics" {
+#   type = list(object({
+#     topic_name         = string
+#     partitions_count   = number
+#     config             = map(string)
+#   }))
+# }
+
+# variable "serviceaccounts" {
+#   type = list(object({
+#     name      = string
+#     description      = string
+#     operation = list(string)
+#   }))
+# }
 

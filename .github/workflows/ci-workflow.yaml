@@ -14,19 +14,17 @@ jobs:
     steps:
       - name: Checkout github-actions-repo
         uses: actions/checkout@v3
-        with:
-          repository: sasidaren-coder/github-actions-test
-          path: github-actions-test
       - name: Checkout cc-client-config-repo
         uses: actions/checkout@v3
         with:
           repository: sasidaren-coder/cc-client-config-repo
           path: cc-client-config-repo
+      - name: Debug Working Directory
+        run: pwd && ls -al
       - name: Custom rules
         run: |
           echo "Working Directory: $(pwd)"
-          echo "Listing Files: $(ls -ltr /home/runner/work/github-actions-test/github-actions-test/)"
-          ./scripts/validate-inputs.sh ${{ inputs.config_path }}
+          ./github-actions-test/scripts/validate-inputs.sh ${{ inputs.config_path }}
       - name: Terraform Init
         run: terraform init -backend-config=...
       - name: Terraform Validate

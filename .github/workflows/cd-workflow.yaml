@@ -1,0 +1,68 @@
+name: CD Apply Workflow
+
+on:
+  workflow_call:
+    inputs:
+      tf_action:
+        required: true
+        type: string
+      config_path:
+        required: true
+        type: string
+
+jobs:
+  extract-env:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.setenv.outputs.env }}
+    steps:
+      - id: setenv
+        run: |
+          IFS='/' read -r client cloud env <<< "${{ inputs.config_path }}"
+          echo "env=$env" >> $GITHUB_OUTPUT
+
+  terraform-apply:
+    needs: extract-env
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.extract-env.outputs.environment }}
+      url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Checkout cc-client-config-repo
+        uses: actions/checkout@v3
+
+      - name: Checkout IAC repo
+        uses: actions/checkout@v3
+        with:
+          repository: sasidaren-coder/github-actions-test
+          path: iac
+
+      # Run validation script from the iac repo
+      - name: Validate inputs
+        run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
+
+      - name: Install Terraform CLI
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Terraform Init
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: |
+          echo "Working Directory: $(pwd)"
+          echo "Listing Files: $(ls -ltr ../..)"
+          terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
+
+
+      - name: Terraform Apply
+        working-directory: iac/confluentcloud-resource-provisioner-tf
+        run: |
+          terraform apply -auto-approve -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"

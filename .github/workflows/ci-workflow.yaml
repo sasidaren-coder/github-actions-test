@@ -1,0 +1,29 @@
+on:
+  workflow_call:
+    inputs:
+      tf_action:
+        required: true
+        type: string  # "plan", "apply"
+      config_path:
+        required: true
+        type: string
+
+jobs:
+  job1-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout github-actions-repo
+        uses: actions/checkout@v3
+      - name: Checkout cc-client-config-repo
+        uses: actions/checkout@v3
+        with:
+          repository: sasidaren-coder/cc-client-config-repo
+          path: cc-client-config-repo
+      - name: Custom rules
+        run: ./scripts/validate-inputs.sh ${{ inputs.config_path }}
+      - name: Terraform Init
+        run: terraform init -backend-config=...
+      - name: Terraform Validate
+        run: terraform validate
+      - name: Terraform Plan
+        run: terraform plan -var-file=cc-client-config-repo/${{ inputs.config_path }}/terraform.tfvars

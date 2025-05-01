@@ -37,10 +37,6 @@ jobs:
           repository: sasidaren-coder/github-actions-test
           path: iac
 
-      # Run validation script from the iac repo
-      - name: Validate inputs
-        run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
-
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
@@ -61,8 +57,9 @@ jobs:
           echo "Listing Files: $(ls -ltr ../..)"
           terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
 
-
       - name: Terraform Apply
         working-directory: iac/confluentcloud-resource-provisioner-tf
         run: |
-          terraform apply -auto-approve -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
+          terraform apply -auto-approve \
+            -var-file=env/dev.terraform.tfvars \
+            -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"

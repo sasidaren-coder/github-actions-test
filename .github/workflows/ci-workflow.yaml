@@ -74,6 +74,24 @@ jobs:
       - name: Validate inputs
         run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
 
+      - name: Extract Environment
+        id: extract-env
+        run: |
+          IFS='/' read -r client cloud env <<< "${{ inputs.config_path }}"
+          echo "env=$env" >> $GITHUB_OUTPUT
+
+      - name: Export Terraform Secrets for Environment
+        run: |
+          echo "TF_VAR_confluent_cloud_api_key=${{ secrets.TF_CONFLUENT_CLOUD_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.TF_CONFLUENT_CLOUD_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_cluster_id=${{ secrets.TF_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_cc_environment_id=${{ secrets.TF_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_rest_endpoint=${{ secrets.TF_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_key=${{ secrets.TF_KAFKA_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_secret=${{ secrets.TF_KAFKA_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
+
+
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:
@@ -93,4 +111,4 @@ jobs:
         run: |
           echo "Working Directory: $(pwd)"
           echo "Listing Files: $(ls -ltr ../..)"
-          terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
+          terraform plan

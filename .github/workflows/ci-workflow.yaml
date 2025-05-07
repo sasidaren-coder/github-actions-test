@@ -90,13 +90,13 @@ jobs:
 
       - name: Export Terraform Secrets for Environment
         run: |
-          echo "TF_VAR_confluent_cloud_api_key=VQKCVKGQATPK7MWH" >> $GITHUB_ENV
-          echo "TF_VAR_confluent_cloud_api_secret=pk81u2x+EqYxlR/OGf4fLr3WMc6Gf4QIUNxTr5qFukuobvTgsVlML/saMm3HpbI7" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_cluster_id=lkc-1mwkj6" >> $GITHUB_ENV
-          echo "TF_VAR_cc_environment_id=env-g96n51" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_rest_endpoint=https://pkc-lgk0v.us-west1.gcp.confluent.cloud:443" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_api_key=4CN4GOQOFUB3IEAF" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_api_secret=hV88QHt1hN+wCHHJA4jOIIAs+fz/9TJNY9T3nhmkfIgyW2ODOPJONJoKss63VP/b" >> $GITHUB_ENV
+          echo "TF_VAR_confluent_cloud_api_key=${{ vars.TF_CONFLUENT_CLOUD_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.TF_CONFLUENT_CLOUD_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_cluster_id=${{ secrets.TF_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_cc_environment_id=${{ secrets.TF_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_rest_endpoint=${{ secrets.TF_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_key=${{ secrets.TF_KAFKA_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_secret=${{ secrets.TF_KAFKA_API_SECRET }}" >> $GITHUB_ENV
           echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
           env
 

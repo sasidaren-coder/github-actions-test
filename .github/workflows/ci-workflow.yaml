@@ -70,7 +70,8 @@ jobs:
     needs: extract-env
     runs-on: ubuntu-latest
     environment:
-      name: ${{ needs.extract-env.outputs.environment }}
+      # name: ${{ needs.extract-env.outputs.environment }}
+      name: dev
     steps:
       # This checks out the CALLER repo (cc-client-config-repo), which happens by default
       - name: Checkout cc-client-config-repo
@@ -106,7 +107,7 @@ jobs:
 
       - name: Show TF_VAR envs
         run: env | grep TF_VAR_
-        
+
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:

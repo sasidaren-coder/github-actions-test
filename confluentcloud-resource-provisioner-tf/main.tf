@@ -55,4 +55,5 @@ output "debug_kafka_inputs" {
     kafka_rest_endpoint = var.kafka_rest_endpoint
     kafka_id            = var.kafka_cluster_id
   }
+  sensitive = false
 }

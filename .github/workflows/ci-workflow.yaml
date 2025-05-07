@@ -97,6 +97,7 @@ jobs:
           echo "TF_VAR_kafka_api_key=${{ secrets.TF_KAFKA_API_KEY }}" >> $GITHUB_ENV
           echo "TF_VAR_kafka_api_secret=${{ secrets.TF_KAFKA_API_SECRET }}" >> $GITHUB_ENV
           echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
+          env
 
 
       - name: Install Terraform CLI

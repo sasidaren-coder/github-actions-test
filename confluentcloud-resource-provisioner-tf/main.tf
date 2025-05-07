@@ -47,13 +47,3 @@ module "service_accounts" {
   kafka_cluster_id = var.kafka_cluster_id
   cc_environment_id = var.cc_environment_id
 }
-
-output "debug_kafka_inputs" {
-  value = {
-    kafka_api_key       = var.kafka_api_key
-    kafka_api_secret    = var.kafka_api_secret
-    kafka_rest_endpoint = var.kafka_rest_endpoint
-    kafka_id            = var.kafka_cluster_id
-  }
-  sensitive = false
-}

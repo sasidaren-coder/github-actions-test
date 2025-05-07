@@ -56,10 +56,21 @@ on:
         type: string
 
 jobs:
+  extract-env:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.setenv.outputs.env }}
+    steps:
+      - id: setenv
+        run: |
+          IFS='/' read -r client cloud env <<< "${{ inputs.config_path }}"
+          echo "env=$env"
+          echo "env=$env" >> $GITHUB_OUTPUT
   terraform-plan:
+    needs: extract-env
     runs-on: ubuntu-latest
     environment:
-      name: ${{ steps.extract-env.outputs.environment }}
+      name: ${{ needs.extract-env.outputs.environment }}
     steps:
       # This checks out the CALLER repo (cc-client-config-repo), which happens by default
       - name: Checkout cc-client-config-repo
@@ -75,12 +86,6 @@ jobs:
       # Run validation script from the iac repo
       - name: Validate inputs
         run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
-
-      - name: Extract Environment
-        id: extract-env
-        run: |
-          IFS='/' read -r client cloud env <<< "${{ inputs.config_path }}"
-          echo "env=$env" >> $GITHUB_OUTPUT
 
       - name: Export Terraform Secrets for Environment
         run: |

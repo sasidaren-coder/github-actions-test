@@ -110,14 +110,6 @@ jobs:
           echo "TF_VAR_resource_yaml_path=$TF_VAR_resource_yaml_path" >> $GITHUB_ENV
 
 
-      - name: Print Terraform secrets (safe)
-        run: |
-          echo "kafka_cluster_id=${{ secrets.TF_KAFKA_CLUSTER_ID }}"
-          echo "cc_environment_id=${{ secrets.TF_CC_ENVIRONMENT_ID }}"
-
-      - name: Show TF_VAR envs
-        run: env | grep TF_VAR_
-
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
         with:

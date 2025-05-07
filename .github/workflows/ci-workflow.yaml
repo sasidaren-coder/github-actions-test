@@ -89,16 +89,26 @@ jobs:
         run: bash iac/scripts/validate-inputs.sh ${{ inputs.config_path }}/resources.yaml
 
       - name: Export Terraform Secrets for Environment
+        env:
+          TF_VAR_confluent_cloud_api_key: ${{ vars.TF_CONFLUENT_CLOUD_API_KEY }}
+          TF_VAR_confluent_cloud_api_secret: ${{ secrets.TF_CONFLUENT_CLOUD_API_SECRET }}
+          TF_VAR_kafka_cluster_id: ${{ vars.TF_KAFKA_CLUSTER_ID }}
+          TF_VAR_cc_environment_id: ${{ vars.TF_CC_ENVIRONMENT_ID }}
+          TF_VAR_kafka_rest_endpoint: ${{ vars.TF_KAFKA_REST_ENDPOINT }}
+          TF_VAR_kafka_api_key: ${{ vars.TF_KAFKA_API_KEY }}
+          TF_VAR_kafka_api_secret: ${{ secrets.TF_KAFKA_API_SECRET }}
+          TF_VAR_resource_yaml_path: ../../${{ inputs.config_path }}/resources.yaml
         run: |
-          echo "TF_VAR_confluent_cloud_api_key=${{ vars.TF_CONFLUENT_CLOUD_API_KEY }}" >> $GITHUB_ENV
-          echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.TF_CONFLUENT_CLOUD_API_SECRET }}" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_cluster_id=${{ vars.TF_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_cc_environment_id=${{ vars.TF_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_rest_endpoint=${{ vars.TF_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_api_key=${{ vars.TF_KAFKA_API_KEY }}" >> $GITHUB_ENV
-          echo "TF_VAR_kafka_api_secret=${{ secrets.TF_KAFKA_API_SECRET }}" >> $GITHUB_ENV
-          echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
-          env
+          echo "Exporting TF_VAR_* variables..."
+          echo "TF_VAR_confluent_cloud_api_key=$TF_VAR_confluent_cloud_api_key" >> $GITHUB_ENV
+          echo "TF_VAR_confluent_cloud_api_secret=$TF_VAR_confluent_cloud_api_secret" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_cluster_id=$TF_VAR_kafka_cluster_id" >> $GITHUB_ENV
+          echo "TF_VAR_cc_environment_id=$TF_VAR_cc_environment_id" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_rest_endpoint=$TF_VAR_kafka_rest_endpoint" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_key=$TF_VAR_kafka_api_key" >> $GITHUB_ENV
+          echo "TF_VAR_kafka_api_secret=$TF_VAR_kafka_api_secret" >> $GITHUB_ENV
+          echo "TF_VAR_resource_yaml_path=$TF_VAR_resource_yaml_path" >> $GITHUB_ENV
+
 
       - name: Print Terraform secrets (safe)
         run: |

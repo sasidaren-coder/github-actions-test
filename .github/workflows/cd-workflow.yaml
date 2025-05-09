@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.setenv.outputs.env }}
+      cloud_provider: ${{ steps.setenv.outputs.cloud_provider }}
     steps:
       - id: setenv
         run: |

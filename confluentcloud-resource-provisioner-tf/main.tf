@@ -57,7 +57,7 @@ for_each = { for k, v in local.active : k => v if v }
   source = "./modules/kafka-topic"
 
   providers = {
-    confluent = var.cloud_provider
+    confluent = confluent.azure
   }
 
   topics = local.resource_config.topics
@@ -70,7 +70,7 @@ module "service_accounts" {
   source = "./modules/kafka-serviceaccounts"
 
   providers = {
-    confluent = var.cloud_provider
+    confluent = confluent.azure
   }
 
   serviceaccounts = local.resource_config.serviceaccounts

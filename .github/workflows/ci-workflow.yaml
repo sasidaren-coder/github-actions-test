@@ -94,7 +94,7 @@ jobs:
       - name: Export Terraform Secrets for Environment
         run: |
           echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
-          echo "TF_VAR_cloud_provider=${{ needs.extract-env.outputs.cloud_provider }}" >> $GITHUB_ENV
+          echo "TF_VAR_cloud_provider=azure" >> $GITHUB_ENV
           echo "TF_VAR_azure_confluent_cloud_api_key=${{ vars.AZURE_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
           echo "TF_VAR_azure_confluent_cloud_api_secret=${{ secrets.AZURE_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
           echo "TF_VAR_azure_kafka_cluster_id=${{ vars.AZURE_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV

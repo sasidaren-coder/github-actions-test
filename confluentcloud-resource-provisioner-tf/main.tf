@@ -39,50 +39,83 @@ provider "confluent" {
 
 locals {
   resource_config = yamldecode(file(var.resource_yaml_path))
-  cloud_provider  = var.cloud_provider
-  active_aliases = {
-    azure = var.cloud_provider == "azure"
-    gcp   = var.cloud_provider == "gcp"
-    aws   = var.cloud_provider == "aws"
-  }
 }
 
-module "topics" {
-  for_each = { for k, v in local.active_aliases : k => v if v }
+module "topics_azure" {
+  count = var.cloud_provider == "azure" ? 1 : 0
 
   source = "./modules/kafka-topic"
 
   providers = {
     confluent = confluent.azure
-    confluent = confluent.gcp
-    confluent = confluent.aws
-  }[each.key]
+  }
 
   topics = local.resource_config.topics
 }
 
-module "service_accounts" {
-  for_each = { for k, v in local.active_aliases : k => v if v }
+module "topics_gcp" {
+  count = var.cloud_provider == "gcp" ? 1 : 0
+
+  source = "./modules/kafka-topic"
+
+  providers = {
+    confluent = confluent.gcp
+  }
+
+  topics = local.resource_config.topics
+}
+
+module "topics_aws" {
+  count = var.cloud_provider == "aws" ? 1 : 0
+
+  source = "./modules/kafka-topic"
+
+  providers = {
+    confluent = confluent.aws
+  }
+
+  topics = local.resource_config.topics
+}
+
+
+module "service_accounts_azure" {
+  count = var.cloud_provider == "azure" ? 1 : 0
 
   source = "./modules/kafka-serviceaccounts"
 
   providers = {
     confluent = confluent.azure
+  }
+
+  serviceaccounts   = local.resource_config.serviceaccounts
+  kafka_cluster_id  = var.azure_kafka_cluster_id
+  cc_environment_id = var.azure_cc_environment_id
+}
+
+module "service_accounts_gcp" {
+  count = var.cloud_provider == "gcp" ? 1 : 0
+
+  source = "./modules/kafka-serviceaccounts"
+
+  providers = {
     confluent = confluent.gcp
+  }
+
+  serviceaccounts   = local.resource_config.serviceaccounts
+  kafka_cluster_id  = var.gcp_kafka_cluster_id
+  cc_environment_id = var.gcp_cc_environment_id
+}
+
+module "service_accounts_aws" {
+  count = var.cloud_provider == "aws" ? 1 : 0
+
+  source = "./modules/kafka-serviceaccounts"
+
+  providers = {
     confluent = confluent.aws
-  }[each.key]
+  }
 
-  serviceaccounts = local.resource_config.serviceaccounts
-
-  kafka_cluster_id = lookup({
-    azure = var.azure_kafka_cluster_id,
-    gcp   = var.gcp_kafka_cluster_id,
-    aws   = var.aws_kafka_cluster_id
-  }, each.key)
-
-  cc_environment_id = lookup({
-    azure = var.azure_cc_environment_id,
-    gcp   = var.gcp_cc_environment_id,
-    aws   = var.aws_cc_environment_id
-  }, each.key)
+  serviceaccounts   = local.resource_config.serviceaccounts
+  kafka_cluster_id  = var.aws_kafka_cluster_id
+  cc_environment_id = var.aws_cc_environment_id
 }

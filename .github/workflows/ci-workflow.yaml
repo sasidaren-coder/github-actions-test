@@ -118,8 +118,7 @@ jobs:
           echo "TF_VAR_aws_kafka_api_secret=${{ secrets.AWS_KAFKA_API_SECRET }}" >> $GITHUB_ENV
           
       - name: Print env vars
-        run: |
-          envs
+        run: env | grep ^TF_VAR_
 
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3

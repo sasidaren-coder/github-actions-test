@@ -116,6 +116,7 @@ jobs:
           echo "TF_VAR_aws_kafka_rest_endpoint=${{ vars.AWS_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
           echo "TF_VAR_aws_kafka_api_key=${{ vars.AWS_KAFKA_API_KEY }}" >> $GITHUB_ENV
           echo "TF_VAR_aws_kafka_api_secret=${{ secrets.AWS_KAFKA_API_SECRET }}" >> $GITHUB_ENV
+          env | grep TF_VAR_
           
         
       - name: Install Terraform CLI

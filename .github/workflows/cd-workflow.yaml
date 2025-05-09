@@ -22,7 +22,7 @@ jobs:
           echo "env=$env"
           echo "cloud_provider=$cloud"
           echo "env=$env" >> $GITHUB_OUTPUT
-          echo "cloud_provider=$cloud" >> $GITHUB_ENV
+          echo "cloud_provider=$cloud" >> $GITHUB_OUTPUT
 
   terraform-apply:
     needs: extract-env
@@ -43,35 +43,28 @@ jobs:
       - name: Export Terraform Secrets for Environment
         run: |
           echo "TF_VAR_resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml" >> $GITHUB_ENV
-
-          if [ "${{ needs.extract-env.outputs.cloud_provider }}" == "azure" ]; then
-            echo "TF_VAR_confluent_cloud_api_key=${{ vars.AZURE_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.AZURE_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_cluster_id=${{ vars.AZURE_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_cc_environment_id=${{ vars.AZURE_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_rest_endpoint=${{ vars.AZURE_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_key=${{ vars.AZURE_KAFKA_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_secret=${{ secrets.AZURE_KAFKA_API_SECRET }}" >> $GITHUB_ENV
-          elif [ "${{ needs.extract-env.outputs.cloud_provider }}" == "gcp" ]; then
-            echo "TF_VAR_confluent_cloud_api_key=${{ vars.GCP_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.GCP_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_cluster_id=${{ vars.GCP_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_cc_environment_id=${{ vars.GCP_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_rest_endpoint=${{ vars.GCP_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_key=${{ vars.GCP_KAFKA_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_secret=${{ secrets.GCP_KAFKA_API_SECRET }}" >> $GITHUB_ENV
-          elif [ "${{ needs.extract-env.outputs.cloud_provider }}" == "aws" ]; then
-            echo "TF_VAR_confluent_cloud_api_key=${{ vars.AWS_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_confluent_cloud_api_secret=${{ secrets.AWS_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_cluster_id=${{ vars.AWS_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_cc_environment_id=${{ vars.AWS_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_rest_endpoint=${{ vars.AWS_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_key=${{ vars.AWS_KAFKA_API_KEY }}" >> $GITHUB_ENV
-            echo "TF_VAR_kafka_api_secret=${{ secrets.AWS_KAFKA_API_SECRET }}" >> $GITHUB_ENV
-          else
-            echo "Unknown cloud provider: ${{ needs.extract-env.outputs.cloud_provider }}"
-            exit 1
-          fi
+          echo "TF_VAR_cloud_provider=${{ needs.extract-env.outputs.cloud_provider }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_confluent_cloud_api_key=${{ vars.AZURE_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_confluent_cloud_api_secret=${{ secrets.AZURE_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_kafka_cluster_id=${{ vars.AZURE_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_cc_environment_id=${{ vars.AZURE_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_kafka_rest_endpoint=${{ vars.AZURE_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_kafka_api_key=${{ vars.AZURE_KAFKA_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_azure_kafka_api_secret=${{ secrets.AZURE_KAFKA_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_confluent_cloud_api_key=${{ vars.GCP_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_confluent_cloud_api_secret=${{ secrets.GCP_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_kafka_cluster_id=${{ vars.GCP_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_cc_environment_id=${{ vars.GCP_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_kafka_rest_endpoint=${{ vars.GCP_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_kafka_api_key=${{ vars.GCP_KAFKA_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_gcp_kafka_api_secret=${{ secrets.GCP_KAFKA_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_confluent_cloud_api_key=${{ vars.AWS_CONFLUENT_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_confluent_cloud_api_secret=${{ secrets.AWS_CONFLUENT_API_SECRET }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_kafka_cluster_id=${{ vars.AWS_KAFKA_CLUSTER_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_cc_environment_id=${{ vars.AWS_CC_ENVIRONMENT_ID }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_kafka_rest_endpoint=${{ vars.AWS_KAFKA_REST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_kafka_api_key=${{ vars.AWS_KAFKA_API_KEY }}" >> $GITHUB_ENV
+          echo "TF_VAR_aws_kafka_api_secret=${{ secrets.AWS_KAFKA_API_SECRET }}" >> $GITHUB_ENV
 
       - name: Install Terraform CLI
         uses: hashicorp/setup-terraform@v3
@@ -91,11 +84,9 @@ jobs:
         run: |
           echo "Working Directory: $(pwd)"
           echo "Listing Files: $(ls -ltr ../..)"
-          terraform plan -var-file=env/dev.terraform.tfvars -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
+          terraform plan
 
       - name: Terraform Apply
         working-directory: iac/confluentcloud-resource-provisioner-tf
         run: |
-          terraform apply -auto-approve \
-            -var-file=env/dev.terraform.tfvars \
-            -var="resource_yaml_path=../../${{ inputs.config_path }}/resources.yaml"
+          terraform apply -auto-approve

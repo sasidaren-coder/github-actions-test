@@ -54,6 +54,9 @@ on:
       config_path:
         required: true
         type: string
+      iac_release_tag:
+        required: true
+        type: string
 
 jobs:
   extract-env:
@@ -86,6 +89,7 @@ jobs:
         with:
           repository: sasidaren-coder/github-actions-test
           path: iac
+          ref: ${{ inputs.iac_release_tag }}
 
       # Run validation script from the iac repo
       - name: Validate inputs

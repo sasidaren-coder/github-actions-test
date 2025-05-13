@@ -119,3 +119,8 @@ module "service_accounts_aws" {
   kafka_cluster_id  = var.aws_kafka_cluster_id
   cc_environment_id = var.aws_cc_environment_id
 }
+
+output "state_version" {
+  value = var.state_version
+  description = "Metadata version of this terraform state"
+}

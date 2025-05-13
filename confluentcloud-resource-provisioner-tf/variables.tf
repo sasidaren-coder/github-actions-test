@@ -107,4 +107,8 @@ variable "resource_yaml_path" {
   description = "Path to the YAML config file"
 }
 
+variable "state_version" {
+  description = "Version of the terraform state metadata"
+  type        = string
+}
 

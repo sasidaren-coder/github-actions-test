@@ -96,3 +96,6 @@ jobs:
         working-directory: iac/confluentcloud-resource-provisioner-tf
         run: |
           terraform apply -auto-approve
+
+      - name: Get Terraform state version
+        run: terraform output state_version
